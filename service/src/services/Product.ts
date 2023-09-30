@@ -14,6 +14,19 @@ export const find = async (id: string): Promise<Product | null> => {
   return product;
 };
 
+export const search = async (searchTerm: string): Promise<Product[]> => {
+  const products = await prisma.product.findMany({
+    where: {
+      OR: [
+        { title: { contains: searchTerm } },
+        { description: { contains: searchTerm } },
+      ],
+    },
+  });
+
+  return products;
+}
+
 export const findMany = async (ids: string[]): Promise<Product[]> => {
   const products = await prisma.product.findMany({
     where: { id: { in: ids.map((id) => parseInt(id)) } },

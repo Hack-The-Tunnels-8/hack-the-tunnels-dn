@@ -5,7 +5,8 @@ import { success, error, verifyAuthorization } from "../utils";
 const router = express.Router();
 
 const getProducts = async (_: Request, response: Response) => {
-  const products = await ProductService.all();
+  const searchTerm = _.query.searchTerm as string | undefined;
+  const products = searchTerm === undefined ? await ProductService.all() : await ProductService.search(searchTerm);
 
   return success(response, {
     data: {
@@ -60,7 +61,7 @@ const createProduct = async (request: Request, response: Response) => {
   });
 };
 
-router.get("/", getProducts);
+router.get("/:searchTerm?", getProducts);
 router.get("/:id", getProduct);
 router.post("/", createProduct);
 
