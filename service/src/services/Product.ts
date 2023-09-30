@@ -27,6 +27,26 @@ export const search = async (searchTerm: string): Promise<Product[]> => {
   return products;
 }
 
+export const update = async (
+  id: string,
+  title: string,
+  description: string,
+  price: number,
+  imageUrl: string = "https://i.imgur.com/EyoQOjC.jpg",
+): Promise<Product | null> => {
+  const product = await prisma.product.update({
+    where: { id: parseInt(id) },
+    data: {
+      title: title,
+      description: description,
+      price: price,
+      imageUrl: imageUrl,
+    },
+  });
+
+  return product;
+}
+
 export const findMany = async (ids: string[]): Promise<Product[]> => {
   const products = await prisma.product.findMany({
     where: { id: { in: ids.map((id) => parseInt(id)) } },
